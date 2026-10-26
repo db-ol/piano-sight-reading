@@ -1,0 +1,103 @@
+{
+  "browser": "155.0.8059.85",
+  "results": [
+    {
+      "size": {
+        "width": 390,
+        "height": 844
+      },
+      "scheme": "light",
+      "layout": {
+        "viewport": 390,
+        "width": 390,
+        "bars": 12,
+        "theme": "light",
+        "overflowing": 0
+      }
+    },
+    {
+      "size": {
+        "width": 390,
+        "height": 844
+      },
+      "scheme": "dark",
+      "layout": {
+        "viewport": 390,
+        "width": 390,
+        "bars": 12,
+        "theme": "dark",
+        "overflowing": 0
+      }
+    },
+    {
+      "size": {
+        "width": 375,
+        "height": 667
+      },
+      "scheme": "light",
+      "layout": {
+        "viewport": 375,
+        "width": 375,
+        "bars": 12,
+        "theme": "light",
+        "overflowing": 0
+      }
+    },
+    {
+      "size": {
+        "width": 375,
+        "height": 667
+      },
+      "scheme": "dark",
+      "layout": {
+        "viewport": 375,
+        "width": 375,
+        "bars": 12,
+        "theme": "dark",
+        "overflowing": 0
+      }
+    },
+    {
+      "size": {
+        "width": 1280,
+        "height": 900
+      },
+      "scheme": "light",
+      "layout": {
+        "viewport": 1280,
+        "width": 1280,
+        "bars": 12,
+        "theme": "light",
+        "overflowing": 0
+      }
+    },
+    {
+      "size": {
+        "width": 1280,
+        "height": 900
+      },
+      "scheme": "dark",
+      "layout": {
+        "viewport": 1280,
+        "width": 1280,
+        "bars": 12,
+        "theme": "dark",
+        "overflowing": 0
+      }
+    },
+    {
+      "engraving": {
+        "count": 480,
+        "errors": [],
+        "errorCount": 0
+      }
+    },
+    {
+      "fakeMicrophone": "captured WAV and completed local inference"
+    },
+    {
+      "offline": "score, history and transcription model load without network"
+    }
+  ],
+  "pageErrors": []
+}

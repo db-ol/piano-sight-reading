@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>五级视奏 · 每天一首</title>
+  <meta name="description" content="中文钢琴五级视奏练习，原创双手乐谱、三十秒准备、示范与本机录音分析。">
+  <meta name="theme-color" content="#f1efe8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="五级视奏">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="appbar wrap">
+    <a class="brand" href="./" aria-label="五级视奏首页"><span class="brand-mark" aria-hidden="true">♮</span><span>五级视奏<small>PIANO SIGHT-READING</small></span></a>
+    <button id="theme" class="icon-button" aria-label="切换深色模式" title="切换深色模式">◐</button>
+  </header>
+  <nav class="tabbar" aria-label="主菜单"><button data-view="practice" aria-current="page"><span aria-hidden="true">♫</span>练习</button><button data-view="exam"><span aria-hidden="true">◷</span>模拟考试</button><button data-view="history"><span aria-hidden="true">▥</span>记录</button><button data-view="about"><span aria-hidden="true">ⓘ</span>说明</button></nav>
+  <main class="wrap">
+    <section id="workspace" aria-label="视奏练习">
+      <div class="intro"><div><p class="eyebrow">ABRSM PIANO · GRADE 5</p><h1 id="view-title">每天一首，稳稳向前。</h1></div><span class="grade" aria-hidden="true">05</span></div>
+      <details id="settings" class="settings panel">
+        <summary><span>练习设置</span><span id="settings-summary">五级中段 · 随机调性</span></summary>
+        <div class="fields">
+          <label>难度<select id="difficulty"><option value="lower">五级下限</option><option value="middle" selected>五级中段</option><option value="upper">五级上限</option></select></label>
+          <label>调性<select id="key"><option value="random">随机调性</option></select></label>
+          <label>拍号<select id="meter"><option value="random">随机拍号</option></select></label>
+          <label>弹奏输入<select id="source"><option value="microphone">麦克风录音</option><option value="midi">MIDI 键盘</option><option value="self">不录音，弹后自评</option></select></label>
+        </div>
+        <p id="input-hint" class="hint">录音只在本机处理。自动识别为实验功能，需要回听核对。</p>
+        <p class="hint">难度分档和默认速度是本站练习设计。更改设置后点“换一首”生效。</p>
+      </details>
+      <div id="exam-intro" class="notice" hidden><strong>３０秒准备，可以试弹。</strong><p>开始后会换一张未见过的谱。正式演奏时关闭示范与节拍器，弹完请点结束。</p></div>
+      <div id="session" class="session panel" hidden aria-live="polite"><div><span id="phase">准备读谱</span><strong id="clock">３０</strong><meter id="input-level" min="0" max="0.12" value="0" aria-label="麦克风输入音量" hidden></meter></div><p id="session-hint">先看调号、拍号与起始手位。</p><button id="session-stop" class="button small">取消本次</button></div>
+      <div id="action-panel" class="action-panel"><p id="action-hint">先看一遍，再连贯地弹完。错了也继续向前。</p><button id="start" class="button primary wide">录下这一遍</button></div>
+      <article class="score-card">
+        <div class="score-heading"><div><p class="eyebrow" id="piece-number">原创练习</p><h2 id="piece-title">正在准备乐谱</h2><p id="piece-meta" class="score-meta"></p></div><button id="new-piece" class="text-button">换一首 <span aria-hidden="true">↻</span></button></div>
+        <div class="score-tools" id="practice-tools"><button id="demo" class="button"><span aria-hidden="true">▷</span> 听示范</button><button id="metronome" class="button" aria-pressed="false">节拍器</button><label class="speed-label"><span class="sr-only">示范与练习速度</span><select id="speed"><option value="0.6">慢速 60％</option><option value="0.8">慢速 80％</option><option value="1" selected>原速 100％</option></select></label></div>
+        <div id="score" aria-label="双手钢琴大谱表"></div>
+        <div class="score-foot"><span>原创练习，不是官方试题</span><button id="focus-score" class="text-button">专注看谱</button></div>
+      </article>
+      <section id="feedback" class="panel feedback" hidden aria-labelledby="feedback-title">
+        <p class="eyebrow">YOUR PRACTICE</p><h2 id="feedback-title">这一遍，练到了什么</h2><p id="result-summary"></p>
+        <p id="uncertainty" class="notice"></p><div id="result-stats" class="result-stats"></div>
+        <div class="legend"><span class="wrong">● 错音</span><span class="missing">○ 漏音</span><span class="rhythm">△ 节奏</span><span class="pause">Ⅱ 停顿</span><span class="uncertain">？待核对</span></div>
+        <ul id="issues" class="issues"></ul>
+        <div id="recording-player" hidden><label for="recording-audio">回听这一遍</label><audio id="recording-audio" controls></audio><a id="download-recording" class="text-button" download="piano-practice.wav">保存录音</a></div>
+        <div id="analysis-actions" hidden><button id="analyze" class="button wide">分析录音（实验功能）</button><p class="hint" id="analysis-status">在本机分析双手与和弦，结果可能有误。</p><progress id="analysis-progress" max="1" value="0" hidden></progress><button id="cancel-analysis" class="text-button" hidden>取消分析</button></div>
+        <fieldset id="self-review"><legend>再听一遍，自己做判断</legend><label><input type="checkbox" id="review-pulse"> 拍子稳定，基本没有停顿</label><label><input type="checkbox" id="review-pitch"> 音高与节奏大体准确</label><label><input type="checkbox" id="review-expression"> 注意了力度、连线和音乐走向</label><button id="save-review" class="button wide">保存本次自评</button></fieldset>
+        <p class="hint">按音高、拍子与连贯性提供练习参考，不是 ABRSM 官方分数。音色、乐句和音乐表现仍需要自己与老师判断。</p>
+      </section>
+    </section>
+    <section id="history-view" hidden aria-labelledby="history-title"><div class="intro"><div><p class="eyebrow">YOUR PROGRESS</p><h1 id="history-title">每一遍，都算数。</h1></div></div><div id="history-summary" class="panel"></div><div id="history-list"></div><button id="clear-history" class="button wide">清空本机记录</button></section>
+    <section id="about-view" hidden aria-labelledby="about-title"><div class="intro"><div><p class="eyebrow">BEFORE YOU PLAY</p><h1 id="about-title">把规则读清楚。</h1></div></div>
+      <article class="panel prose"><h2>五级视奏</h2><p>约８至１２小节。拍号包括２／４、３／４、４／４、３／８、６／８。双手演奏，每手和弦最多两个音。</p><p>准备３０秒，可以试弹任意部分。重在保持拍子、节奏、音高轮廓和连贯性，也要照顾力度与表情。</p><p>大调包括Ｃ、Ｇ、Ｆ、Ｄ、Ａ、降Ｂ、降Ｅ、Ｅ、降Ａ。小调包括ｄ、ａ、ｅ、ｇ、ｂ、升ｆ、ｃ。</p><p>两版大纲的五级视奏要求相同。音域和具体速度没有统一官方数值，本网站采用保守手位与练习速度。</p><h2>反馈怎么读</h2><p>MIDI 直接记录键盘事件。麦克风需要从声音中推测音符，踏板、混响、和弦和环境噪声都可能造成误判。麦克风结果一律待核对，不等于你真的弹错。</p><p>均匀放慢不等于节奏不稳。停顿与局部节奏偏差会单独提示。全无输入或识别失败时不会生成“全错”的成绩。</p><h2>设备与离线</h2><p>iPhone 与 Mac 的 Safari 不支持原生 Web MIDI。使用麦克风，或改用支持 MIDI 的电脑浏览器并连接电钢琴。</p><p>麦克风需要 HTTPS 或本机 localhost，以及你的授权。请把手机放稳，尽量减少环境声音。录音时示范与节拍器自动关闭，避免被一起录入。</p><p>首次联网打开后可缓存网站。转录模型需要另行下载一次，所有处理都在本机。Safari 可能回收离线数据和练习历史，请勿把浏览器记录当成永久备份。</p><button id="cache-model" class="button wide">准备离线识别模型</button><p id="cache-status" class="hint"></p><h2>来源与验证</h2><p><a href="docs/research.md">完整调研与官方 PDF 页码</a> · <a href="docs/plan.md">功能和技术方案</a> · <a href="docs/verification.md">验证记录与真机待测项</a></p><p>非 ABRSM 官方产品，与 ABRSM 没有关联。未在真实 iPhone 或钢琴麦克风上完成验证。</p></article>
+    </section>
+    <footer><span id="offline-status">正在准备离线资源</span><span>练习数据只存在本机</span></footer>
+  </main>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <noscript>请启用 JavaScript，以生成乐谱并使用练习功能。</noscript>
+  <script src="vendor/vexflow.js"></script><script src="js/generator.js"></script><script src="js/alignment.js"></script><script src="js/audio.js"></script><script src="js/input.js"></script><script src="js/transcribe.js"></script><script src="js/storage.js"></script><script src="js/score.js"></script><script src="js/app.js"></script>
+</body>
+</html>

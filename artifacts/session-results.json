@@ -1,0 +1,11 @@
+{
+  "browser": "155.0.8059.85",
+  "checks": [
+    "new unseen score, full 30 second preparation and transition to performance",
+    "free practice has no three minute cutoff",
+    "unavailable local storage never reports a successful save",
+    "late rejected microphone permission cannot cancel a newer session",
+    "permission denial returns to a usable idle state"
+  ],
+  "pageErrors": []
+}

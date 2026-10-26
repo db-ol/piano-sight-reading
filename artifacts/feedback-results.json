@@ -1,0 +1,230 @@
+{
+  "browser": "155.0.8059.85",
+  "checks": [
+    {
+      "scheme": "light",
+      "source": "midi",
+      "summary": {
+        "total": 105,
+        "correct": 102,
+        "wrong": 2,
+        "missing": 1,
+        "extra": 1,
+        "rhythm": 2,
+        "pauses": 1,
+        "uncertain": 0,
+        "suspectedWrong": 0,
+        "suspectedMissing": 0,
+        "suspectedExtra": 0,
+        "suspectedRhythm": 0,
+        "suspectedPauses": 0,
+        "tempoBpm": 80,
+        "tempoRatio": 1,
+        "rejected": 0
+      },
+      "chordHeads": [
+        {
+          "color": "rgb(41, 46, 40)",
+          "parent": "vf-auto3062"
+        },
+        {
+          "color": "rgb(184, 47, 48)",
+          "parent": "vf-auto3062"
+        },
+        {
+          "color": "rgb(41, 46, 40)",
+          "parent": "vf-auto3073"
+        },
+        {
+          "color": "rgb(41, 46, 40)",
+          "parent": "vf-auto3079"
+        },
+        {
+          "color": "rgb(41, 46, 40)",
+          "parent": "vf-auto3085"
+        },
+        {
+          "color": "rgb(41, 46, 40)",
+          "parent": "vf-auto3091"
+        },
+        {
+          "color": "rgb(41, 46, 40)",
+          "parent": "vf-auto3095"
+        },
+        {
+          "color": "rgb(41, 46, 40)",
+          "parent": "vf-auto3113"
+        },
+        {
+          "color": "rgb(41, 46, 40)",
+          "parent": "vf-auto3113"
+        },
+        {
+          "color": "rgb(41, 46, 40)",
+          "parent": "vf-auto3119"
+        },
+        {
+          "color": "rgb(41, 46, 40)",
+          "parent": "vf-auto3119"
+        }
+      ],
+      "markers": [
+        "●",
+        "○",
+        "＋",
+        "△",
+        "Ⅱ",
+        "rit.●"
+      ]
+    },
+    {
+      "scheme": "light",
+      "source": "microphone",
+      "summary": {
+        "total": 105,
+        "correct": 0,
+        "wrong": 0,
+        "missing": 0,
+        "extra": 0,
+        "rhythm": 0,
+        "pauses": 0,
+        "uncertain": 105,
+        "suspectedWrong": 2,
+        "suspectedMissing": 1,
+        "suspectedExtra": 1,
+        "suspectedRhythm": 2,
+        "suspectedPauses": 1,
+        "tempoBpm": 80,
+        "tempoRatio": 1,
+        "rejected": 0
+      },
+      "markers": [
+        "●？",
+        "○？",
+        "＋？",
+        "△？",
+        "Ⅱ？",
+        "rit.●？"
+      ]
+    },
+    {
+      "scheme": "light",
+      "source": "unrelated synthetic transcription",
+      "reliable": false,
+      "preciseStatisticsHidden": true
+    },
+    {
+      "scheme": "dark",
+      "source": "midi",
+      "summary": {
+        "total": 105,
+        "correct": 102,
+        "wrong": 2,
+        "missing": 1,
+        "extra": 1,
+        "rhythm": 2,
+        "pauses": 1,
+        "uncertain": 0,
+        "suspectedWrong": 0,
+        "suspectedMissing": 0,
+        "suspectedExtra": 0,
+        "suspectedRhythm": 0,
+        "suspectedPauses": 0,
+        "tempoBpm": 80,
+        "tempoRatio": 1,
+        "rejected": 0
+      },
+      "chordHeads": [
+        {
+          "color": "rgb(228, 233, 216)",
+          "parent": "vf-auto3062"
+        },
+        {
+          "color": "rgb(255, 147, 147)",
+          "parent": "vf-auto3062"
+        },
+        {
+          "color": "rgb(228, 233, 216)",
+          "parent": "vf-auto3073"
+        },
+        {
+          "color": "rgb(228, 233, 216)",
+          "parent": "vf-auto3079"
+        },
+        {
+          "color": "rgb(228, 233, 216)",
+          "parent": "vf-auto3085"
+        },
+        {
+          "color": "rgb(228, 233, 216)",
+          "parent": "vf-auto3091"
+        },
+        {
+          "color": "rgb(228, 233, 216)",
+          "parent": "vf-auto3095"
+        },
+        {
+          "color": "rgb(228, 233, 216)",
+          "parent": "vf-auto3113"
+        },
+        {
+          "color": "rgb(228, 233, 216)",
+          "parent": "vf-auto3113"
+        },
+        {
+          "color": "rgb(228, 233, 216)",
+          "parent": "vf-auto3119"
+        },
+        {
+          "color": "rgb(228, 233, 216)",
+          "parent": "vf-auto3119"
+        }
+      ],
+      "markers": [
+        "●",
+        "○",
+        "＋",
+        "△",
+        "Ⅱ",
+        "rit.●"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "source": "microphone",
+      "summary": {
+        "total": 105,
+        "correct": 0,
+        "wrong": 0,
+        "missing": 0,
+        "extra": 0,
+        "rhythm": 0,
+        "pauses": 0,
+        "uncertain": 105,
+        "suspectedWrong": 2,
+        "suspectedMissing": 1,
+        "suspectedExtra": 1,
+        "suspectedRhythm": 2,
+        "suspectedPauses": 1,
+        "tempoBpm": 80,
+        "tempoRatio": 1,
+        "rejected": 0
+      },
+      "markers": [
+        "●？",
+        "○？",
+        "＋？",
+        "△？",
+        "Ⅱ？",
+        "rit.●？"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "source": "unrelated synthetic transcription",
+      "reliable": false,
+      "preciseStatisticsHidden": true
+    }
+  ],
+  "pageErrors": []
+}
