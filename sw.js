@@ -1,4 +1,6 @@
-const VERSION = 'sight-reading-shell-v3';
+const SHELL_PREFIX = 'piano-shell:' + self.registration.scope + ':';
+const VERSION = SHELL_PREFIX + 'v4';
+const MODEL_CACHE = 'sight-reading-model-v1';
 const FILES = [
   './', 'index.html', 'css/style.css', 'css/key-guide.css', 'manifest.webmanifest',
   'js/generator.js', 'js/alignment.js', 'js/audio.js', 'js/input.js', 'js/recorder-worklet.js',
@@ -8,19 +10,25 @@ const FILES = [
   'docs/research.md', 'docs/plan.md', 'docs/verification.md', 'docs/grade-scope.md'
 ];
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(FILES)));
+  const requests = FILES.map(file => new Request(new URL(file, self.registration.scope), { cache: 'reload' }));
+  event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(requests)).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('sight-reading-shell-') && key !== VERSION).map(key => caches.delete(key)))).then(() => self.clients.claim()));
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith(SHELL_PREFIX) && key !== VERSION).map(key => caches.delete(key)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
-  event.respondWith(caches.match(event.request).then(cached => {
+  if (event.request.method !== 'GET' || !event.request.url.startsWith(self.registration.scope)) return;
+  const vendorAsset = event.request.url.startsWith(self.registration.scope + 'vendor/');
+  event.respondWith(caches.match(event.request, { cacheName: VERSION }).then(async cached => {
     if (cached) return cached;
+    if (vendorAsset) {
+      const stored = await caches.match(event.request, { cacheName: MODEL_CACHE });
+      if (stored) return stored;
+    }
     return fetch(event.request).then(response => {
-      if (response.ok && new URL(event.request.url).pathname.includes('/vendor/')) {
+      if (response.ok && vendorAsset) {
         const copy = response.clone();
-        event.waitUntil(caches.open('sight-reading-model-v1').then(cache => cache.put(event.request, copy)));
+        event.waitUntil(caches.open(MODEL_CACHE).then(cache => cache.put(event.request, copy)));
       }
       return response;
     });

@@ -377,15 +377,16 @@ select {
 }
 .fields .speed-label { margin-left:0; }
 .fields .speed-label select { border:1px solid var(--line); padding:8px; font-size:16px; }
-.score-tools .speed-label>span {
-  position:absolute;
-  width:1px;
-  height:1px;
-  overflow:hidden;
-  clip-path:inset(50%)
+.score-tools .speed-label, #grade-picker {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--muted)
 }
+.score-tools .speed-label select { width:auto; color:var(--ink); }
 #grade-picker { flex-shrink:0; }
-#grade { font-size:14px; border-radius:22px; padding-inline:14px 5px; }
+#grade { font-size:14px; border-radius:22px; padding-inline:14px 5px; color:var(--ink); }
 
 .speed-label select {
   font-size:12px;
@@ -939,8 +940,10 @@ main {
   .action-panel { padding-bottom: 12px; }
   .score-heading { padding: 14px 16px 10px; }
   .score-heading h2 { margin: 2px 0; font-size: 22px; }
-  .score-tools { padding: 8px 12px; }
-  [data-language=bi] .score-tools { flex-wrap:wrap; }
+  .score-tools { padding: 8px 12px; flex-wrap:wrap; }
+  #grade-picker, .score-tools .speed-label { flex-direction:column; align-items:flex-start; gap:0; }
+  [data-language=bi] .score-tools { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  [data-language=bi] .score-tools .speed-label { grid-column:1/-1; flex-direction:row; align-items:center; justify-content:space-between; gap:6px; margin:0; }
   [data-language=bi] .score-tools .button { white-space:normal; }
   [data-language=bi] .settings summary>span:first-child { white-space:normal; }
 }
@@ -948,4 +951,7 @@ main {
 @media (max-width: 360px) {
   .brand-mark { display:none; }
   .language-control select { padding-inline:8px 2px; }
+  .tabbar .nav-label { font-size:11px; }
+  [data-language=bi] .intro:has(#grade-picker) { flex-wrap:wrap; }
+  [data-language=bi] #grade-picker { flex-direction:row; align-items:center; gap:8px; }
 }

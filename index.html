@@ -36,13 +36,13 @@
   <nav class="tabbar" aria-label="主菜单" data-en-aria-label="Main menu">
     <button data-view="practice" aria-current="page"><span aria-hidden="true">♫</span><span class="nav-label" data-en="Practice">练习</span></button>
     <button data-view="exam"><span aria-hidden="true">◷</span><span class="nav-label" data-en="Mock exam">模拟考试</span></button>
-    <button data-view="guide" data-tab="guide"><span aria-hidden="true">♯</span><span class="nav-label" data-en="Key guide">调性指南</span></button>
+    <button data-view="guide" data-tab="guide"><span aria-hidden="true">♯</span><span class="nav-label" data-en="Major &amp; minor">大调与小调</span></button>
     <button data-view="history"><span aria-hidden="true">▥</span><span class="nav-label" data-en="History">记录</span></button>
     <button data-view="about"><span aria-hidden="true">ⓘ</span><span class="nav-label" data-en="About">说明</span></button>
   </nav>
   <main class="wrap">
     <section id="workspace" aria-label="视奏练习" data-en-aria-label="Sight reading practice">
-      <div class="intro" id="practice-heading"><h1 id="view-title">每天一首，稳稳向前。</h1><label id="grade-picker"><span class="sr-only" data-en="ABRSM grade">ABRSM 级别</span><select id="grade"><option value="5" data-en="Grade 5">五级</option><option value="7" data-en="Grade 7">七级</option><option value="8" data-en="Grade 8">八级</option></select></label></div>
+      <div class="intro" id="practice-heading"><h1 id="view-title">每天一首，稳稳向前。</h1><label id="grade-picker"><span data-en="Exam grade">考试级别</span><select id="grade"><option value="5" data-en="Grade 5">五级</option><option value="7" data-en="Grade 7">七级</option><option value="8" data-en="Grade 8">八级</option></select></label></div>
       <details id="settings" class="settings panel">
         <summary><span data-en="Practice settings">练习设置</span><span id="settings-summary">五级中段 · 随机调性</span></summary>
         <div class="fields" id="practice-fields">
@@ -54,14 +54,14 @@
         </div>
         <p id="input-hint" class="hint">录音只在本机处理。自动识别为实验功能，需要回听核对。</p>
         <p class="hint" data-en="Page turns start in automatic mode on phones and manual mode on computers. Your choice is saved. In automatic mode, MIDI follows the notes you play. Microphone and self review turn at the set tempo. You can browse freely during exam preparation.">手机默认自动翻谱，电脑默认手动，网站会记住你的选择。自动翻谱时，MIDI 跟随你弹的音，麦克风和自评按设定速度翻谱。模拟考试的准备阶段可以自由看谱。</p>
-        <p class="hint" data-en="The difficulty bands and starting tempos are practice settings. Choose New piece to apply your changes.">难度分档和默认速度是本站练习设计。更改设置后点“换一首”生效。</p>
+        <p class="hint" data-en="The difficulty bands and starting tempos are practice settings. Choose New piece after changing the difficulty, key or time signature.">难度分档和默认速度是本站练习设计。更改难度、调性或拍号后，点“换一首”生效。</p>
       </details>
       <div id="exam-intro" class="notice" hidden><strong data-en="You have 30 seconds to prepare and try the music.">３０秒准备，可以试弹。</strong><p data-en="Start to see a fresh score. The demo and metronome are off during the performance. Select Finish when you have played the last note.">开始后会换一张未见过的谱。正式演奏时关闭示范与节拍器，弹完请点结束。</p></div>
       <div id="session" class="session panel" hidden aria-live="polite"><div><span id="phase">准备读谱</span><strong id="clock">３０</strong><meter id="input-level" min="0" max="0.12" value="0" aria-label="麦克风输入音量" data-en-aria-label="Microphone input level" hidden></meter></div><p id="session-hint">先看调号、拍号与起始手位。</p><button id="session-stop" class="button small">取消本次</button><button type="button" id="follow-pause" class="button small" hidden></button></div>
       <div id="action-panel" class="action-panel"><button id="start" class="button primary wide">录下这一遍</button><button id="start-follow" class="button" data-en="Follow without recording" hidden>不录音跟谱</button></div>
       <article class="score-card">
         <div class="score-heading"><div><p class="eyebrow" id="piece-number">原创练习</p><h2 id="piece-title">正在准备乐谱</h2><p id="piece-meta" class="score-meta"></p></div><button id="new-piece" class="text-button"><span class="control-label" data-en="New piece">换一首</span> <span aria-hidden="true">↻</span></button></div>
-        <div class="score-tools" id="practice-tools"><button id="demo" class="button"><span aria-hidden="true">▷</span> 听示范</button><button id="metronome" class="button" aria-pressed="false">节拍器</button><label class="speed-label" id="tempo-control"><span data-en="Practice tempo">练习速度</span><select id="speed"><option value="0.6" data-en="Slow 60%">慢速 60％</option><option value="0.8" data-en="Slow 80%">慢速 80％</option><option value="1" selected data-en="Full tempo 100%">原速 100％</option></select></label></div>
+        <div class="score-tools" id="practice-tools"><button id="demo" class="button"><span aria-hidden="true">▷</span> 听示范</button><button id="metronome" class="button" aria-pressed="false">节拍器</button><label class="speed-label" id="tempo-control"><span data-en="Practice and page turn speed">练习与翻谱速度</span><select id="speed"><option value="0.6" data-en="Slow 60%">慢速 60％</option><option value="0.8" data-en="Slow 80%">慢速 80％</option><option value="1" selected data-en="Full tempo 100%">原速 100％</option></select></label></div>
         <div id="score" aria-label="双手钢琴大谱表" data-en-aria-label="Piano grand staff for both hands"></div>
         <div class="score-foot"><span data-en="Original practice music, independent of ABRSM">原创练习，不是官方试题</span><button id="focus-score" class="text-button">专注看谱</button></div>
       </article>
@@ -77,8 +77,8 @@
       </section>
     </section>
     <section id="guide-view" hidden aria-labelledby="guide-title">
-      <div class="intro" id="guide-heading"><h1 id="guide-title" data-en="Key guide">调性指南</h1></div>
-      <p class="guide-intro" data-en="Choose a key and a short study. Listen, play it yourself, then try a fresh piece in the same key.">选一个调，挑一条短练习。先听再弹，最后试奏一首同调的新谱。</p>
+      <div class="intro" id="guide-heading"><h1 id="guide-title" data-en="Major and minor key guide">大调与小调指南</h1></div>
+      <p class="guide-intro" data-en="Choose a key to see its key signature and scale. Listen to six short studies, then try a fresh piece in the same key.">选一个调，查看调号和音阶，试听六条短练习，再试奏一首同调的新谱。</p>
       <div id="key-guide"></div>
     </section>
     <section id="history-view" hidden aria-labelledby="history-title"><div class="intro"><div><p class="eyebrow" data-en="YOUR PROGRESS">练习记录</p><h1 id="history-title" data-en="Every take counts.">每一遍，都算数。</h1></div></div><div id="history-summary" class="panel"></div><div id="history-list"></div><button id="clear-history" class="button wide" data-en="Clear practice history on this device">清空本机记录</button></section>

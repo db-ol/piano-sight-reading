@@ -59,6 +59,14 @@ async function main() {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, permissions: ['microphone'] });
     const page = await context.newPage();
     page.on('pageerror', error => failures.push(error.message));
+    // Seed an earlier shell before the new app installs its offline resources.
+    await page.goto(base.replace(/\/$/, '') + '/icons/icon.svg');
+    await page.evaluate(async () => {
+      const legacy = await caches.open('sight-reading-shell-v1');
+      await legacy.put(new URL('../', location.href), new Response('<title>Old edition</title>', {
+        headers: { 'Content-Type': 'text/html' }
+      }));
+    });
     await page.goto(base);
     await page.waitForSelector('#score svg');
     const engraving = await page.evaluate(() => {
@@ -128,6 +136,7 @@ async function main() {
     await context.setOffline(true);
     await page.reload();
     await page.waitForSelector('#score svg');
+    assert.deepEqual(await page.locator('#grade option').evaluateAll(options => options.map(o => o.value)), ['5', '7', '8']);
     assert.ok(await page.locator('#score svg').count() >= 8);
     const offlineModel = await page.evaluate(async () => { await SightTranscribe.load(); return SightTranscribe.ready(); });
     assert.equal(offlineModel, true);

@@ -80,6 +80,15 @@ async function main() {
       await assertVisibleBar();
     }
 
+    const toolbarSpeed = page.locator('#practice-tools #speed');
+    const settingsSpeed = page.locator('#practice-fields #speed');
+    assert.ok(await toolbarSpeed.isVisible());
+    await page.click('#settings summary');
+    await settingsSpeed.selectOption('0.8');
+    await page.click('#settings summary');
+    await toolbarSpeed.waitFor({ state: 'visible' });
+    assert.equal(await toolbarSpeed.inputValue(), '0.8');
+    await toolbarSpeed.selectOption('1');
     await page.click('#start-follow');
     assert.equal(await page.locator('#source').inputValue(), 'microphone');
     assert.equal(await currentBar(), 0);

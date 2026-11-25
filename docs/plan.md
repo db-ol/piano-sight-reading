@@ -46,4 +46,4 @@
 
 官方未公布统一的考官逐字台词和绝对音域。本项目采用中文流程提示与保守手位，不伪造官方原话。是否需要与老师指定的练习音域或措辞一致？如果需要，可以之后提供老师的要求再调整，当前不阻塞练习。
 
-发布目标建议为 `github.com/db-ol/grade5-sight-reading`，Pages 地址为 `https://db-ol.github.io/grade5-sight-reading/`。完成代码与验证后展示待发布版本、仓库说明和目标，再等你明确批准。
+代码与验证完成后，先展示待发布版本和目标，确认后发布。[代码仓库](https://github.com/db-ol/piano-sight-reading) · [在线练习](https://db-ol.github.io/piano-sight-reading/)

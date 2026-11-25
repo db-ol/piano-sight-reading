@@ -139,13 +139,18 @@
     setMessage('start', startLabel());
     document.querySelectorAll('.tabbar button').forEach(function (button) { button.disabled = busy; });
   }
+  function placeTempoControl() {
+    var inSettings = state.view === 'exam' || $('settings').open;
+    $(inSettings ? 'practice-fields' : 'practice-tools').append($('tempo-control'));
+  }
+  $('settings').addEventListener('toggle', placeTempoControl);
   function showView(view, fresh) {
     stopSound();
     state.view = view;
     $('workspace').hidden = view !== 'practice' && view !== 'exam';
     $('guide-view').hidden = view !== 'guide';
     $(view === 'guide' ? 'guide-heading' : 'practice-heading').append($('grade-picker'));
-    $(view === 'exam' ? 'practice-fields' : 'practice-tools').append($('tempo-control'));
+    placeTempoControl();
     if (view === 'guide') { $('recording-audio').pause(); SightKeyGuide.show(); }
     $('history-view').hidden = view !== 'history';
     $('about-view').hidden = view !== 'about';
