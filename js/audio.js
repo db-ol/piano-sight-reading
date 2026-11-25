@@ -325,7 +325,7 @@
     return o;
   }
 
-  // A metronome that ticks until stopped. beatsPerBar sets which beats are accented.
+  // Group lengths use quarter notes so uneven beats can share the same clock.
   // onFail runs if the audio could not start.
   var metro = null;
 
@@ -334,6 +334,7 @@
     var c = context();
     if (!c) return false;
     var period = 60 / bpm;
+    var groups = Array.isArray(beatsPerBar) ? beatsPerBar : Array(beatsPerBar || 4).fill(1);
     var m = { timer: null, out: bus(), oscs: [] };
     metro = m;
     whenRunning(c, function () {
@@ -343,8 +344,8 @@
       (function tick() {
         if (metro !== m) return;
         while (next < c.currentTime + 0.25) {
-          m.oscs.push(click(m.out, next, beat % (beatsPerBar || 4) === 0));
-          next += period;
+          m.oscs.push(click(m.out, next, beat % groups.length === 0));
+          next += period * groups[beat % groups.length];
           beat++;
         }
         m.oscs = m.oscs.slice(-8);
@@ -382,11 +383,7 @@
     var eventMap = new Map((score.events || []).map(function (event) { return [event.id, event]; }));
     var holds = new Set((score.events || []).filter(function (event) { return event.fermata; }).map(function (event) { return event.onset; }));
     function clock(beat) {
-      var rit = score.ritardando;
-      if (!rit || beat <= rit.fromBeat) return beat * seconds;
-      var span = Math.max(1, (score.totalBeats || score.bars * score.barBeats) - rit.fromBeat);
-      var extra = beat - rit.fromBeat;
-      return seconds * (beat + (rit.factor - 1) * extra * extra / (2 * span));
+      return seconds * root.SightTiming.beatsAt(score, beat);
     }
     whenRunning(c, function () {
       if (current !== mine) return;

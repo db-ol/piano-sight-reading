@@ -1,0 +1,26 @@
+.following-score { overflow-anchor: none; }
+
+.following-score #session {
+  position: sticky;
+  top: 2px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 2px 6px;
+  padding: 6px 8px;
+}
+
+.following-score #session > div { gap: 6px; flex-wrap: wrap; line-height: 1.2; }
+.following-score #session strong { font-size: 22px; }
+.following-score #session-hint { display: none; }
+.following-score #session-stop { grid-column: 3; grid-row: 1; }
+.following-score #follow-pause { grid-column: 2; grid-row: 1; }
+.following-score #session button { max-width: 96px; padding: 4px 8px; line-height: 1.25; }
+#score .follow-current { box-shadow: inset 3px 0 var(--accent); }
+#score .follow-current .bar-number { font-weight: 700; color: var(--accent); }
+#follow-demo-stop {
+  position: fixed;
+  z-index: 7;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  background: var(--accent);
+  color: var(--card);
+}

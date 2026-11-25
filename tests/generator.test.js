@@ -178,3 +178,58 @@ test('unsupported settings fail explicitly', () => {
   assert.throws(() => G.generate({ meter: '5/4' }), RangeError);
   assert.throws(() => G.generate({ difficulty: 'expert' }), RangeError);
 });
+
+test('advanced grades use the cumulative keys and meters and preserve the default grade', () => {
+  assert.deepEqual(G.keysForGrade('7').slice(16).map(k => k.id), ['C#m', 'Fm']);
+  assert.deepEqual(G.keysForGrade(8).slice(18).map(k => k.id), ['B', 'Db']);
+  assert.deepEqual(G.metersForGrade(7).slice(5), ['9/8', '5/8', '5/4', '7/8', '7/4']);
+  assert.deepEqual(G.metersForGrade(8).slice(10), ['12/8']);
+  assert.throws(() => G.generate({ grade: 7, key: 'Db' }), RangeError);
+  assert.throws(() => G.generate({ grade: 7, meter: '12/8' }), RangeError);
+  assert.throws(() => G.generate({ grade: '3' }), RangeError);
+  assert.deepEqual(G.generate({ seed: 123 }), G.generate({ grade: '5', seed: 123 }));
+});
+
+test('advanced scores have playable voices, complete bars, register changes and grade specific tempos and chords', () => {
+  for (const grade of ['7', '8']) for (const key of G.keysForGrade(grade)) {
+    for (const meter of G.metersForGrade(grade)) for (const level of G.DIFFICULTIES) {
+      const score = G.generate({ grade, key: key.id, meter, difficulty: level.id, seed: 812 });
+      assert.equal(score.grade, grade);
+      assert.equal(score.bars, (grade === '7' ? [16, 18, 20] : [12, 16, 20])[G.DIFFICULTIES.indexOf(level)]);
+      assert.equal(score.barBeats, G.beatGroups(meter).reduce((a, b) => a + b));
+      assert.deepEqual(new Set(score.leftClefs), new Set(['bass', 'treble']));
+      assert.ok(score.tempoChanges.length >= (grade === '8' ? 4 : 2));
+      assert.ok(score.tempoChanges[0].factor > 1);
+      assert.equal(score.tempoChanges.at(-1).factor, 1);
+      for (const change of score.tempoChanges) assert.equal(change.fromBeat, score.barStarts[change.bar]);
+      const maxChord = grade === '8' ? 3 : 2;
+      for (const hand of ['right', 'left']) {
+        const voice = score.events.filter(e => e.hand === hand);
+        assert.equal(Math.max(...voice.map(e => e.notes.length)), maxChord);
+        for (let bar = 0; bar < score.bars; bar++) {
+          let cursor = score.barStarts[bar];
+          for (const event of voice.filter(e => e.bar === bar)) {
+            assert.equal(event.onset, cursor);
+            assert.ok(score.constraints.noteDurations.includes(event.duration));
+            assert.ok(!event.notes.length || event.notes.at(-1).midi - event.notes[0].midi <= score.constraints.maxChordSpan);
+            for (const note of event.notes) {
+              if (hand === 'right' && score.ottavaBars.includes(bar)) {
+                const [name, octave] = note.key.split('/');
+                assert.equal(note.writtenKey, name + '/' + (Number(octave) - 1));
+              } else assert.equal(note.writtenKey, undefined);
+            }
+            cursor += event.duration;
+          }
+          assert.equal(cursor, score.barStarts[bar] + score.barBeats);
+        }
+      }
+      const notes = score.playbackNotes;
+      for (const right of notes.filter(n => n.hand === 'right')) {
+        const overlapping = notes.filter(n => n.hand === 'left' && n.onset < right.onset + right.duration && n.onset + n.duration > right.onset);
+        assert.ok(overlapping.every(left => left.midi < right.midi), score.id);
+      }
+      const finalBar = notes.filter(n => n.bar === score.bars - 1);
+      assert.ok(finalBar.every(n => n.duration === score.barBeats && n.onset + n.duration === score.totalBeats));
+    }
+  }
+});

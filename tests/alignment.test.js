@@ -25,6 +25,22 @@ function performance(speed = 1) {
   return score.events.flatMap(e => e.notes.map(n => ({ midi: n.midi, time: 2 + e.onset * 0.5 / speed, duration: 0.4 / speed, confidence: 1 })));
 }
 
+test('a printed tempo change and return preserve the written note positions in feedback', () => {
+  const timing = require('../js/timing.js');
+  const changes = [{ fromBeat: 4, factor: 2 }, { fromBeat: 8, factor: 1 }];
+  const piece = { ...score, tempoChanges: changes };
+  const elapsed = [0, 1, 2, 3, 4, 4.5, 5, 5.5, 6, 7, 8, 9];
+  assert.deepEqual(score.events.map(e => timing.beatsAt(piece, e.onset)), elapsed);
+  const take = score.events.flatMap(e => e.notes.map(n => ({ midi: n.midi, time: elapsed[e.onset] * 0.5 })));
+  const result = A.analyze(piece, take);
+  assert.equal(result.summary.rhythm, 0);
+  assert.equal(result.summary.pauses, 0);
+  assert.equal(result.summary.tempoBpm, score.bpm);
+  assert.equal(result.notes.at(-1).onset, 11);
+  const slowing = { ...piece, totalBeats: 12, ritardando: { fromBeat: 8, factor: 1.5 } };
+  assert.equal(timing.beatsAt(slowing, 12), 11);
+});
+
 test('a correct chord and melody have no issues despite initial silence', () => {
   const result = A.analyze(score, performance());
   assert.equal(result.summary.correct, 14);

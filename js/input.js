@@ -227,7 +227,11 @@
       names.push(port.name || 'MIDI 键盘');
       ids.push(port.id);
       port.onmidimessage = function (event) {
-        midiMessage(midiRecording, event.data, event.receivedTime || event.timeStamp, port.id);
+        var time = event.receivedTime || event.timeStamp;
+        midiMessage(midiRecording, event.data, time, port.id);
+        if (midiRecording && midiOptions.onNote && (event.data[0] & 240) === 144 && event.data[2] > 0) {
+          midiOptions.onNote(event.data[1], time);
+        }
       };
     });
     var lostInput = connectedIDs.some(function (id) { return ids.indexOf(id) < 0; });

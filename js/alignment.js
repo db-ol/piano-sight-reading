@@ -1,9 +1,8 @@
 (function (root, factory) {
   'use strict';
-  var api = factory();
-  if (typeof module === 'object' && module.exports) module.exports = api;
-  else root.SightAlignment = api;
-})(typeof self !== 'undefined' ? self : this, function () {
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./timing.js'));
+  else root.SightAlignment = factory(root.SightTiming);
+})(typeof self !== 'undefined' ? self : this, function (timing) {
   'use strict';
 
   function median(values) {
@@ -203,6 +202,9 @@
       return good;
     });
     var expected = groupExpected(expectedNotes(score).filter(function (note) { return finite(note.onset) && finite(note.midi); }));
+    if (score.tempoChanges && score.tempoChanges.length) {
+      expected.forEach(function (group) { group.onset = timing.beatsAt(score, group.onset); });
+    }
     var actual = groupPerformed(valid, finite(options.chordWindow) ? options.chordWindow : 0.06);
     if (expected.length > 2000 || actual.length > 4000) throw new RangeError('Too many note groups to align');
     var offset = actual.length && expected.length ? actual[0].time - expected[0].onset * target : 0;
@@ -250,7 +252,7 @@
         pause = timingError > Math.max(0.7, secondsPerBeat);
         rhythm = !pause && Math.abs(timingError) > Math.max(0.11, expectedInterval * 0.22);
         if (pause) {
-          pauses.push({ bar: e.notes[0].bar, noteId: e.notes[0].noteId, onset: e.onset, seconds: timingError, time: a.time, uncertain: uncertainSource });
+          pauses.push({ bar: e.notes[0].bar, noteId: e.notes[0].noteId, onset: e.notes[0].onset, seconds: timingError, time: a.time, uncertain: uncertainSource });
           summary[uncertainSource ? 'suspectedPauses' : 'pauses']++;
         }
         if (rhythm) summary[uncertainSource ? 'suspectedRhythm' : 'rhythm']++;

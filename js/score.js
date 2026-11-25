@@ -36,6 +36,9 @@
     var columns = computed.gridTemplateColumns.split(' ').length;
     var width = (container.clientWidth - 10 - (columns > 1 ? 8 : 0)) / (columns > 1 ? 2 : 1);
     var scale = width < 380 ? 0.85 : 1;
+    var advanced = score.grade === '7' || score.grade === '8';
+    if (advanced) scale = Math.min(scale, width / 435);
+    var topSpace = advanced ? 16 : 0;
     var virtual = Math.floor(width / scale);
     for (var bar = 0; bar < score.bars; bar++) {
       var system = document.createElement('div');
@@ -43,13 +46,14 @@
       system.dataset.bar = bar;
       system.id = 'bar-' + bar;
       var renderer = new VF.Renderer(system, VF.Renderer.Backends.SVG);
-      renderer.resize(width, 235 * scale);
+      renderer.resize(width, (235 + topSpace) * scale);
       var ctx = renderer.getContext();
       ctx.scale(scale, scale);
       ctx.setFillStyle(color('score-ink'));
       ctx.setStrokeStyle(color('score-ink'));
-      var treble = new VF.Stave(15, 12, virtual - 25).addClef('treble').addKeySignature(score.key);
-      var bass = new VF.Stave(15, 117, virtual - 25).addClef('bass').addKeySignature(score.key);
+      var treble = new VF.Stave(15, 12 + topSpace, virtual - 25).addClef('treble').addKeySignature(score.key);
+      var leftClef = score.leftClefs ? score.leftClefs[bar] : 'bass';
+      var bass = new VF.Stave(15, 117 + topSpace, virtual - 25).addClef(leftClef).addKeySignature(score.key);
       if (bar === 0) { treble.addTimeSignature(score.meter); bass.addTimeSignature(score.meter); }
       if (bar === score.bars - 1) { treble.setEndBarType(VF.Barline.type.END); bass.setEndBarType(VF.Barline.type.END); }
       var startX = Math.max(treble.getNoteStartX(), bass.getNoteStartX());
@@ -67,8 +71,8 @@
           var rests = !event.notes.length;
           var r = event.restWholeBar ? ['w', false] : rhythm(event.duration);
           var note = new VF.StaveNote({
-            clef: handIndex ? 'bass' : 'treble',
-            keys: rests ? [handIndex ? 'd/3' : 'b/4'] : event.notes.map(function (n) { return n.key; }),
+            clef: handIndex ? leftClef : 'treble',
+            keys: rests ? [handIndex && leftClef === 'bass' ? 'd/3' : 'b/4'] : event.notes.map(function (n) { return n.writtenKey || n.key; }),
             duration: r[0] + (rests ? 'r' : ''),
             dots: r[1] ? 1 : 0,
             auto_stem: true
@@ -92,7 +96,7 @@
         var voice = new VF.Voice({ num_beats: parts[0], beat_value: parts[1] }).setMode(VF.Voice.Mode.SOFT).addTickables(staveNotes);
         VF.Accidental.applyAccidentals([voice], score.key);
         voices.push(voice);
-        var groups = score.meter === '6/8' ? [new VF.Fraction(3, 8)] : score.meter === '3/8' ? [new VF.Fraction(3, 8)] : [new VF.Fraction(1, 4)];
+        var groups = SightGenerator.beatGroups(score.meter).map(function (quarters) { return new VF.Fraction(quarters * 2, 8); });
         allBeams.push.apply(allBeams, VF.Beam.generateBeams(staveNotes, { groups: groups, beam_rests: false }));
       });
       var formatter = new VF.Formatter().joinVoices([voices[0]]).joinVoices([voices[1]]);
@@ -100,18 +104,26 @@
       voices[0].draw(ctx, treble);
       voices[1].draw(ctx, bass);
       allBeams.forEach(function (beam) { beam.setContext(ctx).draw(); });
+      if (score.ottavaBars && score.ottavaBars.includes(bar)) {
+        var melody = voices[0].getTickables();
+        var ottava = new VF.TextBracket({ start: melody[0], stop: melody[melody.length - 1], text: '8', superscript: 'va', position: 'top' });
+        ottava.render_options.color = color('score-ink');
+        ottava.setContext(ctx).draw();
+      }
       var number = document.createElement('span');
       number.className = 'bar-number';
       number.textContent = String(bar + 1).padStart(2, '0');
       system.append(number);
       var svg = system.querySelector('svg');
       svg.setAttribute('role', 'img');
-      svg.setAttribute('aria-label', '第' + (bar + 1) + '小节，' + score.keyLabel + '，' + score.meter);
-      if (score.ritardando && (score.barStarts ? score.barStarts[bar] : bar * score.barBeats) === score.ritardando.fromBeat) {
-        var rit = document.createElement('span');
-        rit.className = 'bar-flags';
-        rit.textContent = 'rit.';
-        system.append(rit);
+      svg.setAttribute('aria-label', barLabel(score, bar));
+      var tempo = score.tempoChanges && score.tempoChanges.find(function (change) { return change.bar === bar && change.text; });
+      var ritardando = score.ritardando && (score.barStarts ? score.barStarts[bar] : bar * score.barBeats) === score.ritardando.fromBeat;
+      if (ritardando || tempo) {
+        var tempoMark = document.createElement('span');
+        tempoMark.className = 'bar-flags';
+        tempoMark.textContent = ritardando ? 'rit.' : tempo.text;
+        system.append(tempoMark);
       }
       container.append(system);
     }
@@ -172,5 +184,15 @@
     var bar = host.querySelector('[data-bar="' + note.bar + '"]');
     if (bar) bar.classList.add('active');
   }
-  root.SightScore = { render: render, highlight: highlight, redraw: function () { if (host && shownScore) render(host, shownScore, shownResult); } };
+  function barLabel(score, bar) {
+    return I18n.t('第' + (bar + 1) + '小节，' + score.keyLabel + '，' + score.meter,
+      'Bar ' + (bar + 1) + ', ' + I18n.keyName(score.key, 'en') + ', ' + score.meter);
+  }
+  document.addEventListener('languagechange:app', function () {
+    if (!host) return;
+    host.querySelectorAll('.score-system svg').forEach(function (svg, bar) {
+      svg.setAttribute('aria-label', barLabel(shownScore, bar));
+    });
+  });
+  root.SightScore = { render: render, highlight: highlight, redraw: function () { if (host && shownScore && host.clientWidth) render(host, shownScore, shownResult); } };
 })(window);

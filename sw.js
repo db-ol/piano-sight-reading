@@ -1,10 +1,11 @@
-const VERSION = 'sight-reading-shell-v1';
+const VERSION = 'sight-reading-shell-v3';
 const FILES = [
-  './', 'index.html', 'css/style.css', 'manifest.webmanifest',
+  './', 'index.html', 'css/style.css', 'css/key-guide.css', 'manifest.webmanifest',
   'js/generator.js', 'js/alignment.js', 'js/audio.js', 'js/input.js', 'js/recorder-worklet.js',
-  'js/transcribe.js', 'js/storage.js', 'js/score.js', 'js/app.js', 'vendor/vexflow.js',
+  'js/transcribe.js', 'js/storage.js', 'js/score.js', 'js/app.js', 'js/i18n.js',
+  'js/static-i18n.js', 'js/app-i18n.js', 'js/key-guide.js', 'js/timing.js', 'js/score-follow.js', 'css/score-follow.css', 'vendor/vexflow.js',
   'fonts/bodoni-moda-subset.woff2', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
-  'docs/research.md', 'docs/plan.md', 'docs/verification.md'
+  'docs/research.md', 'docs/plan.md', 'docs/verification.md', 'docs/grade-scope.md'
 ];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(FILES)));

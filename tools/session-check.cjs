@@ -62,6 +62,29 @@ async function main() {
     assert.equal(await page.locator('#session').isVisible(), true);
     await page.click('#session-stop');
     checks.push('late rejected microphone permission cannot cancel a newer session');
+    await page.selectOption('#language-select', 'en');
+    await page.click('[data-view="exam"]');
+    for (const [grade, key, meter] of [['7', 'C#m', '7/8'], ['8', 'Db', '12/8']]) {
+      await page.selectOption('#grade', grade);
+      await page.click('#settings summary');
+      await page.selectOption('#key', key);
+      await page.selectOption('#meter', meter);
+      await page.click('#settings summary');
+      await page.click('#start');
+      assert.equal(await page.locator('#grade').isDisabled(), true);
+      const meta = await page.locator('#piece-meta').textContent();
+      assert.ok(meta.includes('Grade ' + grade) && meta.includes(meter));
+      await page.clock.fastForward(30100);
+      await page.click('#session-stop');
+      await page.click('#save-review');
+    }
+    await page.click('[data-view="history"]');
+    const history = await page.locator('#history-list').innerText();
+    assert.match(history, /Grade 7.*C♯ minor.*7\/8/);
+    assert.match(history, /Grade 8.*D♭ major.*12\/8/);
+    await page.reload();
+    assert.equal(await page.locator('#grade').inputValue(), '8');
+    checks.push('advanced exam keys, metres, grade history and grade preference');
     await context.close();
 
     const denied = await browser.newContext();

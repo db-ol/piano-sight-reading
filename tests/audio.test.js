@@ -75,6 +75,7 @@ function harness(contextModes = []) {
     close() { this.closeCalls++; this.state = 'closed'; this.emit('statechange'); return Promise.resolve(); }
   }
   const root = {
+    SightTiming: require('../js/timing.js'),
     AudioContext: FakeAudioContext,
     navigator: { audioSession: {} },
     document: { visibilityState: 'visible', addEventListener(name, fn) { documentEvents.set(name, fn); } },
@@ -134,6 +135,16 @@ test('hiding stops the demonstration and metronome and updates the controls', ()
   assert.equal(stopped, true);
   assert.equal(resets, 1);
   assert.ok(oscillators.every(o => o.stops.length >= 2));
+});
+
+test('the metronome leaves three eighth notes in the final group of seven eight', () => {
+  const h = harness();
+  h.audio.unlock();
+  h.audio.metronome(120, [1, 1, 1.5]);
+  h.advance(2000);
+  const clicks = h.contexts[0].oscillators;
+  assert.deepEqual(clicks.map(o => Math.round(o.startedAt * 1000)), [1100, 1600, 2100, 2850]);
+  assert.deepEqual(clicks.map(o => o.frequency.value), [1760, 1320, 1320, 1760]);
 });
 
 test('pagehide and a restored page invalidate audio until the next tap', () => {
